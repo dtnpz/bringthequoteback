@@ -13,8 +13,8 @@ function runWhenReady(readySelector, callback) {
             callback(elem);
         } else {
             numAttempts++;
-            if (numAttempts >= 34) {
-                console.warn('Giving up after 34 attempts. Could not find: ' + readySelector);
+            if (numAttempts >= 25) {
+                console.warn('trying: ' + readySelector);
             } else {
                 setTimeout(tryNow, 250 * Math.pow(1.1, numAttempts));
             }
