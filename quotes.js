@@ -45,6 +45,10 @@
         runWhenReady("article[data-testid='tweet']", function(articleElement) {
             var currentURL = window.location.href;
             console.log(currentURL)
+            if (currentURL === "https://twitter.com/home") {
+                currentURL = "";
+            }
+
             var newURL = currentURL + "/quotes";
             console.log("newURL",newURL)
             var retweetArticle = document.querySelector("div[data-testid='retweet']");
