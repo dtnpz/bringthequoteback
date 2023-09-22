@@ -1,9 +1,22 @@
 // ==UserScript==
-// @name         Twitter and X Script
+// @name         Twitter and X Script v4
 // @match        https://twitter.com/*
 // @match        https://x.com/*
 // @run-at       document-idle
 // ==/UserScript==
+
+var excludedUrls = [
+    "https://twitter.com/home",
+    "https://twitter.com/",
+    "https://x.com/",
+    "https://x.com/home"
+    // Add more URLs as needed
+];
+
+function shouldRunScript() {
+    var currentURL = window.location.href;
+    return !excludedUrls.includes(currentURL);
+}
 
 function runWhenReady(readySelector, callback) {
     var numAttempts = 0;
@@ -13,8 +26,8 @@ function runWhenReady(readySelector, callback) {
             callback(elem);
         } else {
             numAttempts++;
-            if (numAttempts >= 25) {
-                console.warn('trying: ' + readySelector);
+            if (numAttempts >= 34) {
+                console.warn('Giving up after 34 attempts. Could not find: ' + readySelector);
             } else {
                 setTimeout(tryNow, 250 * Math.pow(1.1, numAttempts));
             }
@@ -30,13 +43,11 @@ function reloadDOM() {
     }
 
     runWhenReady("article[data-testid='tweet']", function(articleElement) {
-
         var currentURL = window.location.href;
-        console.log("currentURL: ",currentURL);
+        console.log(currentURL)
         var newURL = currentURL + "/quotes";
         var retweetArticle = document.querySelector("div[data-testid='retweet']");
         console.log("retweetArticle: ",retweetArticle);
-
         if (retweetArticle !== null) {
             retweetArticle.style.position = 'relative';
             retweetArticle.style.left = '-20px';
@@ -61,7 +72,7 @@ function reloadDOM() {
 
             var svgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             svgPath.setAttribute('d', 'M8.75 21V3h2v18h-2zM18 21V8.5h2V21h-2zM4 21l.004-10h2L6 21H4zm9.248 0v-7h2v7h-2z');
-            svgPath.style.fill = '#808d9a'; // Yellow pastel tone
+            svgPath.style.fill = '#808d9a';
 
             var svgGroup = document.createElement('div');
             svgGroup.style.display = 'flex';
@@ -69,18 +80,19 @@ function reloadDOM() {
             svgGroup.style.alignItems = 'center';
             svgElement.style.zIndex = '10';
             svgElement.appendChild(svgPath);
+
             svgElement.addEventListener('mouseenter', function() {
                 newButton.style.color = '#FFD700';
-                svgPath.style.fill = '#fcec03'; // Yellow pastel tone
-                cssCircle.style.backgroundColor = 'rgba(255, 215, 0, 0.75)'; // 75% opacity
+                svgPath.style.fill = '#fcec03';
+                cssCircle.style.backgroundColor = 'rgba(255, 215, 0, 0.75)';
                 cssCircle.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
-                cssCircle.style.width = '39px'; // Set width to 75px
-                cssCircle.style.height = '39px'; // Set height to 75px
+                cssCircle.style.width = '39px';
+                cssCircle.style.height = '39px';
                 cssCircle.style.borderRadius = '50%';
                 cssCircle.style.top = '-28px';
                 cssCircle.style.left = '-11px';
                 svgPath.style.opacity = '100%';
-                cssCircle.style.opacity = '10%';
+                cssCircle.style.opacity = '15%';
             });
 
             svgElement.addEventListener('mouseleave', function() {
@@ -92,10 +104,9 @@ function reloadDOM() {
 
             var cssCircle = document.createElement('div');
             cssCircle.classList.add('css-circle');
-            // Yellow pastel tone
-            svgPath.style.fill = '#808d9a'; // Yellow pastel tone
-            cssCircle.style.width = '39px'; // Set width to 75px
-            cssCircle.style.height = '39px'; // Set height to 75px
+            svgPath.style.fill = '#808d9a';
+            cssCircle.style.width = '39px';
+            cssCircle.style.height = '39px';
             cssCircle.style.borderRadius = '50%';
             cssCircle.style.position = 'relative';
             cssCircle.style.top = '-28px';
@@ -127,19 +138,19 @@ function reloadDOM() {
                 isHovered = true;
                 setTimeout(function() {
                     if (isHovered) {
-                        newButton.style.color = '#FFD700'; // Yellow pastel tone
-                        svgPath.style.fill = '#FFD700'; // Yellow pastel tone
-                        cssCircle.style.backgroundColor = 'rgba(255, 215, 0, 0.75)'; // 75% opacity
+                        newButton.style.color = '#FFD700';
+                        svgPath.style.fill = '#FFD700';
+                        cssCircle.style.backgroundColor = 'rgba(255, 215, 0, 0.75)';
                         cssCircle.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
-                        cssCircle.style.width = '39px'; // Set width to 75px
-                        cssCircle.style.height = '39px'; // Set height to 75px
+                        cssCircle.style.width = '39px';
+                        cssCircle.style.height = '39px';
                         cssCircle.style.borderRadius = '50%';
                         cssCircle.style.top = '-28px';
                         cssCircle.style.left = '-11px';
                         svgPath.style.opacity = '100%';
                         cssCircle.style.opacity = '03%';
                     }
-                }, 250); // Delay hover effect for 0.25 seconds
+                }, 250);
             });
 
             newButton.addEventListener('mouseleave', function() {
@@ -158,13 +169,28 @@ function reloadDOM() {
     });
 }
 
-document.addEventListener('click', function() {
+function checkAndReloadDOM() {
     var currentURL = window.location.href;
-    if (currentURL !== localStorage.getItem('lastVisitedURL')) {
+    var lastVisitedURL = localStorage.getItem('lastVisitedURL');
+    if (currentURL !== lastVisitedURL) {
         localStorage.setItem('lastVisitedURL', currentURL);
+        if (shouldRunScript()) {
+            reloadDOM();
+            console.log('domReload Triggered');
+        }
+    }
+}
+
+// Initial check
+checkAndReloadDOM();
+
+// Periodic check for URL change
+setInterval(checkAndReloadDOM, 1000); // Check every 1 second
+
+// Event listener for manual trigger
+document.addEventListener('click', function() {
+    if (shouldRunScript()) {
         reloadDOM();
-        console.log('domReload Triggered')
+        console.log('Manual domReload Triggered');
     }
 });
-
-// setTimeout(reloadDOM, 5000);
