@@ -1,5 +1,5 @@
     // ==UserScript==
-    // @name         Twitter and X Script v5.4.0
+    // @name         Twitter and X Script v5.4.1
     // @match        https://twitter.com/*
     // @match        https://x.com/*
     // @run-at       document-idle
@@ -46,14 +46,16 @@
             var currentURL = window.location.href;
             console.log(currentURL)
             var newURL = currentURL + "/quotes";
+            console.log("newURL",newURL)
             var retweetArticle = document.querySelector("div[data-testid='retweet']");
             console.log("retweetArticle: ",retweetArticle);
             var alreadyRetweeted = document.querySelector("div[data-testid='unretweet']");
             console.log("alreadyRetweeted: ",alreadyRetweeted);
             if (retweetArticle !== null) {
+                console.log('retweetArticleOkay')
                 retweetArticle.style.position = 'relative';
                 retweetArticle.style.left = '-20px';
-        
+
                 var newDiv = document.createElement('div');
                 newDiv.id = 'quotesnewbt';
                 newDiv.style.padding = '5px';
@@ -167,14 +169,14 @@
                 newDiv.appendChild(newAnchor);
 
                 retweetArticle.insertAdjacentElement('afterend', newDiv);
-        
+
             }
             if (alreadyRetweeted !== null){
                 console.log("alreadyRetweeted: ",alreadyRetweeted);
                 console.log('okey')
                 alreadyRetweeted.style.position = 'relative';
                 alreadyRetweeted.style.left = '-20px';
-        
+
                 var newDiv2 = document.createElement('div');
                 newDiv2.id = 'quotesnewbt';
                 newDiv2.style.padding = '5px';
