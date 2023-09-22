@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Twitter and X Script v4
+// @name         Twitter and X Script v5.0.2
 // @match        https://twitter.com/*
 // @match        https://x.com/*
 // @run-at       document-idle
@@ -26,7 +26,7 @@ function runWhenReady(readySelector, callback) {
             callback(elem);
         } else {
             numAttempts++;
-            if (numAttempts >= 20) {
+            if (numAttempts >= 34) {
                 console.warn('Giving up after 34 attempts. Could not find: ' + readySelector);
             } else {
                 setTimeout(tryNow, 250 * Math.pow(1.1, numAttempts));
@@ -47,11 +47,14 @@ function reloadDOM() {
         console.log(currentURL)
         var newURL = currentURL + "/quotes";
         var retweetArticle = document.querySelector("div[data-testid='retweet']");
+        var alreadyRetweeted = document.querySelector("div[data-testid='unretweet']");
         console.log("retweetArticle: ",retweetArticle);
-        if (retweetArticle !== null) {
+        console.log("alreadyRetweeted: ",alreadyRetweeted);
+        if (retweetArticle !== null || alreadyRetweeted !== null) {
             retweetArticle.style.position = 'relative';
             retweetArticle.style.left = '-20px';
-
+            alreadyRetweeted.style.position = 'relative';
+            alreadyRetweeted.style.left = '-20px';
             var newDiv = document.createElement('div');
             newDiv.id = 'quotesnewbt';
             newDiv.style.padding = '5px';
@@ -112,7 +115,7 @@ function reloadDOM() {
             cssCircle.style.top = '-28px';
             cssCircle.style.left = '-11px';
             svgPath.style.opacity = '100%';
-            cssCircle.style.opacity = '10%';
+            cssCircle.style.opacity = '15%';
 
             newAnchor.appendChild(svgElement);
             newAnchor.appendChild(cssCircle);
@@ -165,6 +168,7 @@ function reloadDOM() {
             newDiv.appendChild(newAnchor);
 
             retweetArticle.insertAdjacentElement('afterend', newDiv);
+            alreadyRetweeted.insertAdjacentElement('afterend', newDiv);
         }
     });
 }
