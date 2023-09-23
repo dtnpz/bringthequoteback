@@ -1,5 +1,5 @@
     // ==UserScript==
-    // @name         Twitter and X Script v5.4.1
+    // @name         Twitter and X Script v5.5.1
     // @match        https://twitter.com/*
     // @match        https://x.com/*
     // @run-at       document-idle
@@ -44,18 +44,30 @@
 
         runWhenReady("article[data-testid='tweet']", function(articleElement) {
             var currentURL = window.location.href;
-            console.log(currentURL)
+            console.log("before",currentURL);
             if (currentURL === "https://twitter.com/home") {
                 currentURL = "";
             }
+            if (!currentURL.includes('/quotes')) {
+                var newURL = "";
+                newURL += "/quotes";
+            }
+            console.log("AFTER",currentURL);
 
-            var newURL = currentURL + "/quotes";
+            //var newURL = currentURL + "/quotes";
             console.log("newURL",newURL)
             var retweetArticle = document.querySelector("div[data-testid='retweet']");
             console.log("retweetArticle: ",retweetArticle);
             var alreadyRetweeted = document.querySelector("div[data-testid='unretweet']");
             console.log("alreadyRetweeted: ",alreadyRetweeted);
-            if (retweetArticle !== null) {
+            if (alreadyRetweeted !== null){
+                foundRetweet();
+            }else{
+                foundArticle();
+            }
+            function foundArticle(){ if (retweetArticle !== null ) {
+                alreadyRetweeted = null;
+                console.log(alreadyRetweeted,"rdy");
                 console.log('retweetArticleOkay')
                 retweetArticle.style.position = 'relative';
                 retweetArticle.style.left = '-20px';
@@ -147,7 +159,7 @@
                     setTimeout(function() {
                         if (isHovered) {
                             newButton.style.color = '#FFD700';
-                            svgPath.style.fill = '#FFD700';
+                            svgPath.style.fill = '#fcec03';
                             cssCircle.style.backgroundColor = 'rgba(255, 215, 0, 0.75)';
                             cssCircle.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
                             cssCircle.style.width = '39px';
@@ -156,7 +168,7 @@
                             cssCircle.style.top = '-28px';
                             cssCircle.style.left = '-11px';
                             svgPath.style.opacity = '100%';
-                            cssCircle.style.opacity = '03%';
+                            cssCircle.style.opacity = '15%';
                         }
                     }, 250);
                 });
@@ -166,6 +178,7 @@
                     newButton.style.color = '#808d9a';
                     svgPath.style.fill = '#808d9a';
                     cssCircle.style.backgroundColor = 'transparent';
+                    cssCircle.style.opacity = '0%';
                 });
 
                 newAnchor.appendChild(newButton);
@@ -174,9 +187,10 @@
 
                 retweetArticle.insertAdjacentElement('afterend', newDiv);
 
-            }
-            if (alreadyRetweeted !== null){
-                console.log("alreadyRetweeted: ",alreadyRetweeted);
+            }}
+           function foundRetweet(){if (alreadyRetweeted !== null){
+                retweetArticle = null;
+                console.log(retweetArticle,"rdyretweetArticle");
                 console.log('okey')
                 alreadyRetweeted.style.position = 'relative';
                 alreadyRetweeted.style.left = '-20px';
@@ -192,7 +206,7 @@
                 newDiv2.style.marginRight = '16px';
 
                 var newAnchor2 = document.createElement('a');
-                newAnchor2.href = newURL;
+                newAnchor2.href = URL;
 
                 var svgElement2 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 svgElement2.setAttribute('viewBox', '0 0 24 24');
@@ -208,7 +222,7 @@
                 svgGroup2.style.flexDirection = 'column';
                 svgGroup2.style.alignItems = 'center';
                 svgElement2.style.zIndex = '10';
-                svgElement2.appendChild(svgPath);
+                svgElement2.appendChild(svgPath2);
 
                 svgElement2.addEventListener('mouseenter', function() {
                     newButton2.style.color = '#FFD700';
@@ -295,8 +309,9 @@
 
                 alreadyRetweeted.insertAdjacentElement('afterend', newDiv2);
             }
-        });
+        }});
     }
+
 
     function checkAndReloadDOM() {
         var currentURL = window.location.href;
@@ -309,17 +324,16 @@
             }
         }
     }
-
     // Initial check
     checkAndReloadDOM();
 
     // Periodic check for URL change
-    setInterval(checkAndReloadDOM, 1000); // Check every 1 second
+    setInterval(checkAndReloadDOM, 2000); // Check every 1 second
 
     // Event listener for manual trigger
     document.addEventListener('click', function() {
         if (shouldRunScript()) {
-            reloadDOM();
-            console.log('Manual domReload Triggered');
+          localStorage.removeItem('lastVisitedURL');
+            console.log('Manual localstorageclear Triggered');
         }
     });
