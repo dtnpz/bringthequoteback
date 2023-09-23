@@ -1,5 +1,5 @@
     // ==UserScript==
-    // @name         Twitter and X Script v5.5.1
+    // @name         Twitter and X Script v5.5.4
     // @match        https://twitter.com/*
     // @match        https://x.com/*
     // @run-at       document-idle
@@ -49,7 +49,7 @@
                 currentURL = "";
             }
             if (!currentURL.includes('/quotes')) {
-                var newURL = "";
+                var newURL = currentURL
                 newURL += "/quotes";
             }
             console.log("AFTER",currentURL);
@@ -206,7 +206,7 @@
                 newDiv2.style.marginRight = '16px';
 
                 var newAnchor2 = document.createElement('a');
-                newAnchor2.href = URL;
+                newAnchor2.href = newURL;
 
                 var svgElement2 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 svgElement2.setAttribute('viewBox', '0 0 24 24');
@@ -291,7 +291,7 @@
                             cssCircle2.style.top = '-28px';
                             cssCircle2.style.left = '-11px';
                             svgPath2.style.opacity = '100%';
-                            cssCircle2.style.opacity = '03%';
+                            cssCircle2.style.opacity = '15%';
                         }
                     }, 250);
                 });
@@ -301,6 +301,7 @@
                     newButton2.style.color = '#808d9a';
                     svgPath2.style.fill = '#808d9a';
                     cssCircle2.style.backgroundColor = 'transparent';
+                    cssCircle2.style.opacity = '0%';
                 });
 
                 newAnchor2.appendChild(newButton2);
@@ -316,7 +317,18 @@
     function checkAndReloadDOM() {
         var currentURL = window.location.href;
         var lastVisitedURL = localStorage.getItem('lastVisitedURL');
-        if (currentURL !== lastVisitedURL) {
+
+        // Check if lastVisitedURL contains "/quotes"
+        if (lastVisitedURL && lastVisitedURL.includes("/quotes")) {
+            var interval = setInterval(function() {
+                var updatedLastVisitedURL = localStorage.getItem('lastVisitedURL');
+
+                if (updatedLastVisitedURL && !updatedLastVisitedURL.includes("/quotes")) {
+                    clearInterval(interval);
+                    checkAndReloadDOM(); // Call the function again after /quotes is removed
+                }
+            }, 1000); // Check every 1 second
+        } else if (currentURL !== lastVisitedURL) {
             localStorage.setItem('lastVisitedURL', currentURL);
             if (shouldRunScript()) {
                 reloadDOM();
@@ -324,6 +336,7 @@
             }
         }
     }
+
     // Initial check
     checkAndReloadDOM();
 
@@ -333,7 +346,8 @@
     // Event listener for manual trigger
     document.addEventListener('click', function() {
         if (shouldRunScript()) {
-          localStorage.removeItem('lastVisitedURL');
+            reloadDOM();
+        //   localStorage.removeItem('lastVisitedURL');
             console.log('Manual localstorageclear Triggered');
         }
     });
