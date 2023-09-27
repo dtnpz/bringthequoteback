@@ -1,5 +1,5 @@
     // ==UserScript==
-    // @name         Twitter and X Script v5.5.4
+    // @name         Twitter and X Script v5.5.5
     // @match        https://twitter.com/*
     // @match        https://x.com/*
     // @run-at       document-idle
@@ -60,6 +60,7 @@
             console.log("retweetArticle: ",retweetArticle);
             var alreadyRetweeted = document.querySelector("div[data-testid='unretweet']");
             console.log("alreadyRetweeted: ",alreadyRetweeted);
+            var likebt = document.querySelector("div[data-testid='like']");
             if (alreadyRetweeted !== null){
                 foundRetweet();
             }else{
@@ -70,7 +71,9 @@
                 console.log(alreadyRetweeted,"rdy");
                 console.log('retweetArticleOkay')
                 retweetArticle.style.position = 'relative';
-                retweetArticle.style.left = '-20px';
+                retweetArticle.style.left = '-31px';
+                likebt.style.position = 'relative';
+                likebt.style.position = '37px'
 
                 var newDiv = document.createElement('div');
                 newDiv.id = 'quotesnewbt';
@@ -193,7 +196,9 @@
                 console.log(retweetArticle,"rdyretweetArticle");
                 console.log('okey')
                 alreadyRetweeted.style.position = 'relative';
-                alreadyRetweeted.style.left = '-20px';
+                alreadyRetweeted.style.left = '-31px';
+                likebt.style.position = 'relative';
+                likebt.style.position = '37px'
 
                 var newDiv2 = document.createElement('div');
                 newDiv2.id = 'quotesnewbt';
