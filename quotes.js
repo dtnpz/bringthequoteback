@@ -73,7 +73,7 @@
                 retweetArticle.style.position = 'relative';
                 retweetArticle.style.left = '-31px';
                 likebt.style.position = 'relative';
-                likebt.style.position = '37px'
+                likebt.style.left = '37px'
 
                 var newDiv = document.createElement('div');
                 newDiv.id = 'quotesnewbt';
@@ -198,7 +198,7 @@
                 alreadyRetweeted.style.position = 'relative';
                 alreadyRetweeted.style.left = '-31px';
                 likebt.style.position = 'relative';
-                likebt.style.position = '37px'
+                likebt.style.left = '37px'
 
                 var newDiv2 = document.createElement('div');
                 newDiv2.id = 'quotesnewbt';
