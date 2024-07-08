@@ -1,5 +1,5 @@
     // ==UserScript==
-    // @name         Twitter and X Script v5.5.5
+    // @name         Twitter and X Script v5.5.7
     // @match        https://twitter.com/*
     // @match        https://x.com/*
     // @run-at       document-idle
@@ -56,11 +56,11 @@
 
             //var newURL = currentURL + "/quotes";
             console.log("newURL",newURL)
-            var retweetArticle = document.querySelector("div[data-testid='retweet']");
+            var retweetArticle = document.querySelector("button[data-testid='retweet']");
             console.log("retweetArticle: ",retweetArticle);
-            var alreadyRetweeted = document.querySelector("div[data-testid='unretweet']");
+            var alreadyRetweeted = document.querySelector("button[data-testid='unretweet']");
             console.log("alreadyRetweeted: ",alreadyRetweeted);
-            var likebt = document.querySelector("div[data-testid='like']");
+            var likebt = document.querySelector("button[data-testid='like']");
             if (alreadyRetweeted !== null){
                 foundRetweet();
             }else{
