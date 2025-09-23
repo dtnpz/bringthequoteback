@@ -1,0 +1,32 @@
+// ==UserScript==
+// @name         Twitter Button Recolor
+// @version      1.0
+// @description  Change tweet/follow buttons to blue background with white text
+// @author       dtnpz
+// @match        https://twitter.com/*
+// @match        https://x.com/*
+// @grant        GM_addStyle
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    GM_addStyle(`
+        a[data-testid="SideNav_NewTweet_Button"],
+        button[data-testid="tweetButton"],
+        button[data-testid="tweetButtonInline"],
+        button[data-testid="confirmationSheetConfirm"],
+        [data-testid="UserCell"] button[data-testid$="-follow"] {
+            background-color: rgb(29, 155, 240) !important;
+            color: #fff !important;
+        }
+
+        a[data-testid="SideNav_NewTweet_Button"] *,
+        button[data-testid="tweetButton"] *,
+        button[data-testid="tweetButtonInline"] *,
+        button[data-testid="confirmationSheetConfirm"] *,
+        [data-testid="UserCell"] button[data-testid$="-follow"] * {
+            color: #ffffff !important;
+        }
+    `);
+})();
